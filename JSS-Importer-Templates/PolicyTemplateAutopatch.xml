@@ -1,0 +1,23 @@
+<policy>
+    <general>
+        <name>Install Latest %PROD_NAME%</name>
+        <enabled>True</enabled>
+        <frequency>Ongoing</frequency>
+        <category>
+            <name>%POLICY_CATEGORY%</name>
+        </category>
+        <trigger_other>autoupdate-%PROD_NAME%</trigger_other>
+    </general>
+    <scope>
+        <all_computers>true</all_computers>
+    </scope>
+    <package_configuration>
+        <!--Package added by JSSImporter-->
+    </package_configuration>
+    <scripts>
+        <!--Scripts added by JSSImporter-->
+    </scripts>
+    <maintenance>
+        <recon>true</recon>
+    </maintenance>
+</policy>
