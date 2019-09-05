@@ -14,19 +14,24 @@ Mac Admin Slack @tlark
 from Cocoa import NSRunningApplication
 import sys
 import subprocess
+import argparse
 
 
-# global vars
-# bundle ID of the app to check
-# you may supply multiple bundle IDs by adding them comma separated as a parameter in jamf pro
-# in the event a developer changes the bundle ID
-APPS = sys.argv[4].split(',')
-# update policy to run, supply the custom policy event name, i.e. install_app02
-POLICY = sys.argv[5]
+# parse arguments
+
+parser = argparse.ArgumentParser(description='Silently patch any not currently running app.')
+parser.add_argument('mount_point', help='(NOT USED) Mount point of the target drive')
+parser.add_argument('computer_name', help='(NOT USED) Computer name')
+parser.add_argument('username', help='(NOT USED) User name')
+parser.add_argument('app_list', help='Comma seperated list of bundle IDs of the applications to patch')
+parser.add_argument('update_policy', help='Update policy to run.')
+args = parser.parse_args()
+
+APPS = args.app_list.split(',')
+POLICY = args.update_policy
 
 
 # start functions
-
 
 def check_if_running(bid):
     """Test to see if an app is running by bundle ID"""
@@ -37,6 +42,7 @@ def check_if_running(bid):
         return True
     if not app:
         return False
+
 
 def run_update_policy(event):
     """run the updater policy for the app"""

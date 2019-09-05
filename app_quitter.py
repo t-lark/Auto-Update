@@ -6,17 +6,17 @@ in the positional parameters
 
 Since this will be ran by jamf remember the first 3 parameters are reserved by jamf, so we will start with parameter 4
 
-APPLIST will be a comma separated list of bundle IDs of apps you want this code to quit, example:
+APP_LIST will be a comma separated list of bundle IDs of apps you want this code to quit, example:
 
 com.apple.Safari,org.mozilla.firefox,com.google.Chrome
 
 PROMPT will be the parameter you use to decide to prompt the user or not, use strings "true" or "false"
 
-APPNAME will be the name of the application and how you want to present it in a dialog box, i.e. Safari or Safari.app
+APP_NAME will be the name of the application and how you want to present it in a dialog box, i.e. Safari or Safari.app
 
-UPDATEPOLICY is the jamf event to trigger the policy to update the app
+UPDATE_POLICY is the jamf event to trigger the policy to update the app
 
-FORCEQUIT is set to true or false in jamf as a psoitional parameter, if you set this to true it does as advertised
+FORCE_QUIT is set to true or false in jamf as a psoitional parameter, if you set this to true it does as advertised
 and will force quit the apps by bundle ID and force an update
 
 SYMBOL is the unicode string for the heart emoji, because we can
@@ -35,20 +35,45 @@ import sys
 import subprocess
 import os
 import time
+import argparse
 
-# positional parameters and global variables
-# list apps by bundle ID to quit
-APPLIST = sys.argv[4].split(',')
-# pass "true" or "false" to this if you want to prompt the user or not
-PROMPT = sys.argv[5].lower()
-# display name of the app in the dialog boxes, i.e. "Safari"
-APPNAME = sys.argv[6]
-# the event trigger of the jamf policy that will update the app
-UPDATEPOLICY = sys.argv[7]
-# option to force quit an app, just in case you need that big red button
-FORCEQUIT = sys.argv[8].lower()
+
+# process arguments
+
+def str_to_bool(string):
+    value = string.lower()
+    if value == 'true':
+        return True
+    if value == 'false':
+        return False
+    raise argparse.ArgumentTypeError('The value must be "true" or "false".')
+
+
+parser = argparse.ArgumentParser(description='Prompt (or force) a user to quit one or more applications.')
+parser.add_argument('mount_point', help='(NOT USED) Mount point of the target drive')
+parser.add_argument('computer_name', help='(NOT USED) Computer name')
+parser.add_argument('username', help='(NOT USED) User name')
+parser.add_argument('app_list', help='Comma seperated list of bundle IDs of the applications to quit')
+parser.add_argument('prompt', type=str_to_bool,
+                    help='Prompt the user ("true" or "false")')
+parser.add_argument('app_name', help='Display name of the app to use in dialog boxes (i.e. "Safari")')
+parser.add_argument('update_policy', help='The event trigger of the Jamf policy that will update the app')
+parser.add_argument('force_quit', type=str_to_bool,
+                    help='Force quit the app, just in case you need that big red button ("true" or "false")')
+args = parser.parse_args()
+
+APP_LIST = args.app_list.split(',')
+PROMPT = args.prompt
+APP_NAME = args.app_name
+UPDATE_POLICY = args.update_policy
+FORCE_QUIT = args.force_quit
+
+
+# global variables
+
 # heart emoji, because we love Snowflake!
 SYMBOL = u'\u2764\ufe0f'
+
 # message to prompt the user to quit and update an app
 MESSAGE = """Greetings Employee:
 
@@ -57,21 +82,20 @@ I.T. would like to patch {0}.  Please click on the "OK" button to continue, this
 You may click "Cancel" to delay this update.
 
 {1} I.T.
-""".format(APPNAME, SYMBOL.encode("utf-8"))
+""".format(APP_NAME, SYMBOL.encode("utf-8"))
 
 FORCEMSG = """Greetings Snowflake:
 
 I.T. would like to patch {0}.  This is an emergency patch and the application will be quit to deploy security patches.
 
 {1} I.T.
-""".format(APPNAME, SYMBOL.encode("utf-8"))
-
+""".format(APP_NAME, SYMBOL.encode("utf-8"))
 
 # message to notify the user upon completion
 COMPLETE = """Thank You!
 
 {0} has been patched on your system.  You may relaunch it now if you wish
-""".format(APPNAME)
+""".format(APP_NAME)
 
 
 # start functions
@@ -172,6 +196,7 @@ def force_quit_applicaiton(bid):
         # terminate the app
         app.forceTerminate()
 
+
 def run_update_policy(event):
     """run the updater policy for the app"""
     # if you don't need to run an update policy, set to "false" to skip this
@@ -187,6 +212,7 @@ def run_update_policy(event):
     if proc.returncode != 0:
         print('Error: %s' % err)
 
+
 def notify_on_completion():
     """notification that the patch is complete"""
     # probably do not need this, can most likely reuse prior dialog box function
@@ -197,23 +223,23 @@ def notify_on_completion():
 def run():
     """runs the workflow of the script"""
     # check to see if the app is not running, if it is not we are in luck we can update now!
-    for app in APPLIST:
+    for app in APP_LIST:
         if not check_if_running(app):
-            run_update_policy(UPDATEPOLICY)
+            run_update_policy(UPDATE_POLICY)
             sys.exit(0)
     # check to see if we are forcing the app to quit first, and take action
-    if FORCEQUIT == 'true':
+    if FORCE_QUIT == 'true':
         force_quit_prompt(FORCEMSG)
         # loop through the bundle ID list
-        for bid in APPLIST:
+        for bid in APP_LIST:
             # force quit the app and force the update via jamf policy
             force_quit_applicaiton(bid)
-            run_update_policy(UPDATEPOLICY)
+            run_update_policy(UPDATE_POLICY)
             user_prompt(COMPLETE)
         # if we are using the force we can exit here
         sys.exit(0)
     # use the bundle ID or IDs from parameter 4 and iterate through them
-    for bid in APPLIST:
+    for bid in APP_LIST:
         # check if the app is running by bundle ID and we are choosing to prompt from parameter 5
         if check_if_running(bid) and PROMPT == 'true':
             # prompt the user
@@ -222,7 +248,7 @@ def run():
             if answer:
                 # quit the app, run the update, prompt to notify when complete
                 quit_application(bid)
-                run_update_policy(UPDATEPOLICY)
+                run_update_policy(UPDATE_POLICY)
                 user_prompt(COMPLETE)
             if not answer:
                 # if they click "Cancel" we will exit
