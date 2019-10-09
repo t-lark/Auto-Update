@@ -38,7 +38,7 @@ import time
 
 # positional parameters and global variables
 # list apps by bundle ID to quit
-APPLIST = sys.argv[4].split(',')
+APPLIST = sys.argv[4].split(",")
 # pass "true" or "false" to this if you want to prompt the user or not
 PROMPT = sys.argv[5].lower()
 # display name of the app in the dialog boxes, i.e. "Safari"
@@ -48,7 +48,7 @@ UPDATEPOLICY = sys.argv[7]
 # option to force quit an app, just in case you need that big red button
 FORCEQUIT = sys.argv[8].lower()
 # heart emoji, because we love Snowflake!
-SYMBOL = u'\u2764\ufe0f'
+SYMBOL = u"\u2764\ufe0f"
 # message to prompt the user to quit and update an app
 MESSAGE = """Greetings Employee:
 
@@ -57,24 +57,31 @@ I.T. would like to patch {0}.  Please click on the "OK" button to continue, this
 You may click "Cancel" to delay this update.
 
 {1} I.T.
-""".format(APPNAME, SYMBOL.encode("utf-8"))
+""".format(
+    APPNAME, SYMBOL.encode("utf-8")
+)
 
 FORCEMSG = """Greetings Snowflake:
 
 I.T. would like to patch {0}.  This is an emergency patch and the application will be quit to deploy security patches.
 
 {1} I.T.
-""".format(APPNAME, SYMBOL.encode("utf-8"))
+""".format(
+    APPNAME, SYMBOL.encode("utf-8")
+)
 
 
 # message to notify the user upon completion
 COMPLETE = """Thank You!
 
 {0} has been patched on your system.  You may relaunch it now if you wish
-""".format(APPNAME)
+""".format(
+    APPNAME
+)
 
 
 # start functions
+
 
 def check_if_running(bid):
     """Test to see if an app is running by bundle ID"""
@@ -90,18 +97,29 @@ def check_if_running(bid):
 def user_prompt(prompt):
     """simple jamf helper dialog box"""
     # set the path to your custom branding, it will default to the warning sign if your branding is not found
-    icon = ''
+    icon = ""
     # test to see what icons are available on the file system
     if not os.path.exists(icon):
         # default fail over icon in case our custom one does not exist
-        icon = '/System/Library/CoreServices/Problem Reporter.app/Contents/Resources/ProblemReporter.icns'
+        icon = "/System/Library/CoreServices/Problem Reporter.app/Contents/Resources/ProblemReporter.icns"
     # build the jamf helper unix command in a list
-    cmd = ['/Library/Application Support/JAMF/bin/jamfHelper.app/Contents/MacOS/jamfHelper',
-           '-windowType', 'utility',
-           '-title', 'Quit Applications',
-           '-description', prompt,
-           '-icon', icon,
-           '-button1', 'OK', '-button2', 'Cancel', '-defaultbutton', '1']
+    cmd = [
+        "/Library/Application Support/JAMF/bin/jamfHelper.app/Contents/MacOS/jamfHelper",
+        "-windowType",
+        "utility",
+        "-title",
+        "Quit Applications",
+        "-description",
+        prompt,
+        "-icon",
+        icon,
+        "-button1",
+        "OK",
+        "-button2",
+        "Cancel",
+        "-defaultbutton",
+        "1",
+    ]
     # call the command via subprocess
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     # get stdout and stderr
@@ -115,24 +133,33 @@ def user_prompt(prompt):
         return False
     # if there is any other return print it
     else:
-        print('Error: %s' % err)
+        print("Error: %s" % err)
 
 
 def force_quit_prompt(prompt):
     """jamf helper dialog to inform of the force quit"""
-    # Custom branding icon path goes here for Force Quit work flows 
-    icon = ''
+    # Custom branding icon path goes here for Force Quit work flows
+    icon = ""
     # test to see what icons are available on the file system
     if not os.path.exists(icon):
         # default fail over icon in case our custom one does not exist
-        icon = '/System/Library/CoreServices/Problem Reporter.app/Contents/Resources/ProblemReporter.icns'
+        icon = "/System/Library/CoreServices/Problem Reporter.app/Contents/Resources/ProblemReporter.icns"
     # build the jamf helper unix command in a list
-    cmd = ['/Library/Application Support/JAMF/bin/jamfHelper.app/Contents/MacOS/jamfHelper',
-           '-windowType', 'utility',
-           '-title', 'Quit Applications',
-           '-description', prompt,
-           '-icon', icon,
-           '-button1', 'OK', '-defaultbutton', '1']
+    cmd = [
+        "/Library/Application Support/JAMF/bin/jamfHelper.app/Contents/MacOS/jamfHelper",
+        "-windowType",
+        "utility",
+        "-title",
+        "Quit Applications",
+        "-description",
+        prompt,
+        "-icon",
+        icon,
+        "-button1",
+        "OK",
+        "-defaultbutton",
+        "1",
+    ]
     # call the command via subprocess
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     # get stdout and stderr
@@ -146,7 +173,7 @@ def force_quit_prompt(prompt):
         return False
     # if there is any other return print it
     else:
-        print('Error: %s' % err)
+        print("Error: %s" % err)
 
 
 def quit_application(bid):
@@ -172,25 +199,27 @@ def force_quit_applicaiton(bid):
         # terminate the app
         app.forceTerminate()
 
+
 def run_update_policy(event):
     """run the updater policy for the app"""
     # if you don't need to run an update policy, set to "false" to skip this
     if event == "false":
         pass
     # unix command list
-    cmd = ['/usr/local/bin/jamf', 'policy', '-event', event]
+    cmd = ["/usr/local/bin/jamf", "policy", "-event", event]
     # execute the policy to the binary
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     # grab stdout and stderr pipes and communicate them to the shell
     out, err = proc.communicate()
     # if we get a non zero response, print the error
     if proc.returncode != 0:
-        print('Error: %s' % err)
+        print("Error: %s" % err)
+
 
 def notify_on_completion():
     """notification that the patch is complete"""
     # probably do not need this, can most likely reuse prior dialog box function
-    # this is just a place holder for now 
+    # this is just a place holder for now
     pass
 
 
@@ -202,7 +231,7 @@ def run():
             run_update_policy(UPDATEPOLICY)
             sys.exit(0)
     # check to see if we are forcing the app to quit first, and take action
-    if FORCEQUIT == 'true':
+    if FORCEQUIT == "true":
         force_quit_prompt(FORCEMSG)
         # loop through the bundle ID list
         for bid in APPLIST:
@@ -215,7 +244,7 @@ def run():
     # use the bundle ID or IDs from parameter 4 and iterate through them
     for bid in APPLIST:
         # check if the app is running by bundle ID and we are choosing to prompt from parameter 5
-        if check_if_running(bid) and PROMPT == 'true':
+        if check_if_running(bid) and PROMPT == "true":
             # prompt the user
             answer = user_prompt(MESSAGE)
             # if they click OK, will return True value
@@ -228,10 +257,10 @@ def run():
                 # if they click "Cancel" we will exit
                 sys.exit(0)
         # if we pass the option to not prompt, just quit the app
-        if check_if_running(bid) and PROMPT == 'false':
+        if check_if_running(bid) and PROMPT == "false":
             quit_application(bid)
 
 
 # gotta have a main
-if __name__=='__main__':
+if __name__ == "__main__":
     run()

@@ -20,7 +20,7 @@ import subprocess
 # bundle ID of the app to check
 # you may supply multiple bundle IDs by adding them comma separated as a parameter in jamf pro
 # in the event a developer changes the bundle ID
-APPS = sys.argv[4].split(',')
+APPS = sys.argv[4].split(",")
 # update policy to run, supply the custom policy event name, i.e. install_app02
 POLICY = sys.argv[5]
 
@@ -38,17 +38,18 @@ def check_if_running(bid):
     if not app:
         return False
 
+
 def run_update_policy(event):
     """run the updater policy for the app"""
     # unix command list
-    cmd = ['/usr/local/bin/jamf', 'policy', '-event', event]
+    cmd = ["/usr/local/bin/jamf", "policy", "-event", event]
     # execute the policy to the binary
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     # grab stdout and stderr pipes and communicate them to the shell
     out, err = proc.communicate()
     # if we get a non zero response, print the error
     if proc.returncode != 0:
-        print('Error: %s' % err)
+        print("Error: %s" % err)
 
 
 def main():
@@ -63,5 +64,5 @@ def main():
 
 
 # run the main
-if __name__=='__main__':
+if __name__ == "__main__":
     main()
