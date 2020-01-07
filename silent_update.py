@@ -2,7 +2,7 @@
 """
 This script will silently patch any app by bundle ID, but only if the app itself is not running
 you must supply the bundle ID of the app to check and the policy event manual trigger for jamf as
-positional parameters 3 and 4
+positional parameters 4 and 5
 
 author:  tlark
 
