@@ -61,7 +61,7 @@ You may click "Cancel" to delay this update.
     APPNAME, SYMBOL.encode("utf-8")
 )
 
-FORCEMSG = """Greetings Snowflake:
+FORCEMSG = """Greetings Employee:
 
 I.T. would like to patch {0}.  This is an emergency patch and the application will be quit to deploy security patches.
 
