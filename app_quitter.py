@@ -3,29 +3,6 @@
 """
 This script will prompt end users to quit apps, or force quit apps depending on the options passed
 in the positional parameters
-
-Since this will be ran by jamf remember the first 3 parameters are reserved by jamf, so we will start with parameter 4
-
-APPLIST will be a comma separated list of bundle IDs of apps you want this code to quit, example:
-
-com.apple.Safari,org.mozilla.firefox,com.google.Chrome
-
-PROMPT will be the parameter you use to decide to prompt the user or not, use strings "true" or "false"
-
-APPNAME will be the name of the application and how you want to present it in a dialog box, i.e. Safari or Safari.app
-
-UPDATEPOLICY is the jamf event to trigger the policy to update the app
-
-FORCEQUIT is set to true or false in jamf as a psoitional parameter, if you set this to true it does as advertised
-and will force quit the apps by bundle ID and force an update
-
-SYMBOL is the unicode string for the heart emoji, because we can
-
-MESSAGE is the actual message you wish to display to the end user
-
-COMPLETE is the message that will pop when the patch is complete
-
-FORCEMSG = the template message to pop when doing a forced update for security reasons
 """
 
 
@@ -36,38 +13,34 @@ import subprocess
 import os
 import time
 
-# positional parameters and global variables
-# list apps by bundle ID to quit
-APPLIST = sys.argv[4].split(",")
-# pass "true" or "false" to this if you want to prompt the user or not
-PROMPT = sys.argv[5].lower()
-# display name of the app in the dialog boxes, i.e. "Safari"
-APPNAME = sys.argv[6]
-# the event trigger of the jamf policy that will update the app
-UPDATEPOLICY = sys.argv[7]
-# option to force quit an app, just in case you need that big red button
-FORCEQUIT = sys.argv[8].lower()
-# heart emoji, because we love Snowflake!
-SYMBOL = u"\u2764\ufe0f"
+# jss side variables
+APPLIST = sys.argv[4].split(",") #Parameter 4 us.zoom.xos
+PROMPT = sys.argv[5].lower() # Parameter 5 prompt usually "true"
+APPNAME = sys.argv[6]# Parameter 6 display name of the app in the dialog boxes, i.e. "Safari"
+UPDATEPOLICY = sys.argv[7]# Parameter 7 the event trigger 
+FORCEQUIT = sys.argv[8].lower() #Parameter 8 forcequit usually "false"
+CORPORATEBRANDING = sys.argv[9]# Parameter 9 eg "Your I.T. Department"
+
+SYMBOL = u"\u2764\ufe0f" # heart emoji, because we love Snowflake!
+# signing off message
+
 # message to prompt the user to quit and update an app
-MESSAGE = """Greetings Employee:
+MESSAGE = """Your {0} application is out of date
 
-I.T. would like to patch {0}.  Please click on the "OK" button to continue, this will prompt you to quit your application and save your work.
+Please press Ok to quickly update it or hit cancel to update later. Make sure to save your work before proceeding.
 
-You may click "Cancel" to delay this update.
-
-{1} I.T.
+{1} {2}
 """.format(
-    APPNAME, SYMBOL.encode("utf-8")
+    APPNAME, SYMBOL.encode("utf-8"), CORPORATEBRANDING
 )
 
-FORCEMSG = """Greetings Employee:
+FORCEMSG = """Your {0} application is out of date
 
-I.T. would like to patch {0}.  This is an emergency patch and the application will be quit to deploy security patches.
+This is an emergency patch and the application will be quit to deploy security patches.
 
-{1} I.T.
+{1} {2}
 """.format(
-    APPNAME, SYMBOL.encode("utf-8")
+    APPNAME, SYMBOL.encode("utf-8"), CORPORATEBRANDING
 )
 
 
@@ -81,7 +54,10 @@ COMPLETE = """Thank You!
 
 
 # start functions
-
+# this chunk for branding
+from SystemConfiguration import SCDynamicStoreCopyConsoleUser
+import sys
+username = (SCDynamicStoreCopyConsoleUser(None, None, None) or [None])[0]; username = [username,""][username in [u"loginwindow", None, u""]]; sys.stdout.write(username + "\n")
 
 def check_if_running(bid):
     """Test to see if an app is running by bundle ID"""
@@ -97,8 +73,7 @@ def check_if_running(bid):
 def user_prompt(prompt):
     """simple jamf helper dialog box"""
     # set the path to your custom branding, it will default to the warning sign if your branding is not found
-    icon = ""
-    # test to see what icons are available on the file system
+    icon = "/Users/{}/Library/Application Support/com.jamfsoftware.selfservice.mac/Documents/Images/brandingimage.png".format(username)    # test to see what icons are available on the file system
     if not os.path.exists(icon):
         # default fail over icon in case our custom one does not exist
         icon = "/System/Library/CoreServices/Problem Reporter.app/Contents/Resources/ProblemReporter.icns"
@@ -139,7 +114,7 @@ def user_prompt(prompt):
 def force_quit_prompt(prompt):
     """jamf helper dialog to inform of the force quit"""
     # Custom branding icon path goes here for Force Quit work flows
-    icon = ""
+    icon = "/Users/{}/Library/Application Support/com.jamfsoftware.selfservice.mac/Documents/Images/brandingimage.png".format(username)    # test to see what icons are available on the file system
     # test to see what icons are available on the file system
     if not os.path.exists(icon):
         # default fail over icon in case our custom one does not exist
