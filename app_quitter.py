@@ -54,10 +54,11 @@ COMPLETE = """Thank You!
 
 
 # start functions
-# this chunk for branding
+# this chunk for in case user info
 from SystemConfiguration import SCDynamicStoreCopyConsoleUser
-import sys
-username = (SCDynamicStoreCopyConsoleUser(None, None, None) or [None])[0]; username = [username,""][username in [u"loginwindow", None, u""]]; sys.stdout.write(username + "\n")
+from Foundation import NSHomeDirectoryForUser
+# grab current user info, in case we need it
+USER, UID, GID = SCDynamicStoreCopyConsoleUser(None, None, None)
 
 def check_if_running(bid):
     """Test to see if an app is running by bundle ID"""
@@ -73,7 +74,7 @@ def check_if_running(bid):
 def user_prompt(prompt):
     """simple jamf helper dialog box"""
     # set the path to your custom branding, it will default to the warning sign if your branding is not found
-    icon = "/Users/{}/Library/Application Support/com.jamfsoftware.selfservice.mac/Documents/Images/brandingimage.png".format(username)    # test to see what icons are available on the file system
+    icon = "/Users/{}/Library/Application Support/com.jamfsoftware.selfservice.mac/Documents/Images/brandingimage.png".format(USER)    # test to see what icons are available on the file system
     if not os.path.exists(icon):
         # default fail over icon in case our custom one does not exist
         icon = "/System/Library/CoreServices/Problem Reporter.app/Contents/Resources/ProblemReporter.icns"
@@ -114,7 +115,7 @@ def user_prompt(prompt):
 def force_quit_prompt(prompt):
     """jamf helper dialog to inform of the force quit"""
     # Custom branding icon path goes here for Force Quit work flows
-    icon = "/Users/{}/Library/Application Support/com.jamfsoftware.selfservice.mac/Documents/Images/brandingimage.png".format(username)    # test to see what icons are available on the file system
+    icon = "/Users/{}/Library/Application Support/com.jamfsoftware.selfservice.mac/Documents/Images/brandingimage.png".format(USER)    # test to see what icons are available on the file system
     # test to see what icons are available on the file system
     if not os.path.exists(icon):
         # default fail over icon in case our custom one does not exist
