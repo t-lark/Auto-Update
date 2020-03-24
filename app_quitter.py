@@ -19,7 +19,8 @@ PROMPT = sys.argv[5].lower() # Parameter 5 prompt usually "true"
 APPNAME = sys.argv[6]# Parameter 6 display name of the app in the dialog boxes, i.e. "Safari"
 UPDATEPOLICY = sys.argv[7]# Parameter 7 the event trigger 
 FORCEQUIT = sys.argv[8].lower() #Parameter 8 forcequit usually "false"
-CORPORATEBRANDING = sys.argv[9]# Parameter 9 eg "Your I.T. Department"
+SIGNOFFMSG = sys.argv[9]# Parameter 9 eg "Your I.T. Department"
+LOGOPATH = sys.argv[10]# Parameter 10 eg "/Library/ADVisory/logonew.png"
 
 SYMBOL = u"\u2764\ufe0f" # heart emoji, because we love Snowflake!
 # signing off message
@@ -31,7 +32,7 @@ Please press Ok to quickly update it or hit cancel to update later. Make sure to
 
 {1} {2}
 """.format(
-    APPNAME, SYMBOL.encode("utf-8"), CORPORATEBRANDING
+    APPNAME, SYMBOL.encode("utf-8"), SIGNOFFMSG
 )
 
 FORCEMSG = """Your {0} application is out of date
@@ -40,7 +41,7 @@ This is an emergency patch and the application will be quit to deploy security p
 
 {1} {2}
 """.format(
-    APPNAME, SYMBOL.encode("utf-8"), CORPORATEBRANDING
+    APPNAME, SYMBOL.encode("utf-8"), SIGNOFFMSG
 )
 
 
@@ -74,7 +75,7 @@ def check_if_running(bid):
 def user_prompt(prompt):
     """simple jamf helper dialog box"""
     # set the path to your custom branding, it will default to the warning sign if your branding is not found
-    icon = "/Users/{}/Library/Application Support/com.jamfsoftware.selfservice.mac/Documents/Images/brandingimage.png".format(USER)    # test to see what icons are available on the file system
+    icon = "{}".format(LOGOPATH)    # test to see what icons are available on the file system
     if not os.path.exists(icon):
         # default fail over icon in case our custom one does not exist
         icon = "/System/Library/CoreServices/Problem Reporter.app/Contents/Resources/ProblemReporter.icns"
@@ -115,7 +116,7 @@ def user_prompt(prompt):
 def force_quit_prompt(prompt):
     """jamf helper dialog to inform of the force quit"""
     # Custom branding icon path goes here for Force Quit work flows
-    icon = "/Users/{}/Library/Application Support/com.jamfsoftware.selfservice.mac/Documents/Images/brandingimage.png".format(USER)    # test to see what icons are available on the file system
+    icon = "{}".format(LOGOPATH)    # test to see what icons are available on the file system
     # test to see what icons are available on the file system
     if not os.path.exists(icon):
         # default fail over icon in case our custom one does not exist
