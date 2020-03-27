@@ -24,15 +24,15 @@ JSSI Creates Two Important Dependancies
 * If app exists and is not current version
 * Named %group_name% most likely `%NAME%-update-smart`
 
-#How To Scale This?
+# How To Scale This?
 1. Make a Recipie Override which Calls 2 XML Files
 2. Make XML File 1 Which customises forthcoming Policy
 3. Make XML File 2 Which customises forthcoming SmartGroup
 
 
-###So How am I supposed to do that?(read next 3 steps) 
+### So How am I supposed to do that?(read next 3 steps) 
 
-###[1/3]
+### [1/3]
 * It's because your using a Recipie Override, editing the Recipie Override's following directives
 * Specificly the `GROUP_NAME` directive
 * The `GROUP_TEMPLATE` and `POLICY_TEMPLATE`
@@ -131,8 +131,8 @@ JSSI Creates Two Important Dependancies
 1. You made a smart group with a scope which checks app version
 2. You made a policy which runs the freshly upload pkg version based on a trigger
 
-#How Do We Run This?
-###Call autopkg from the command line please
+# How Do We Run This?
+### Call autopkg from the command line please
 #### you should `autopkg list-recipes` to see what's available then you can call that via name
 
 * `autopkg  run -vv --post 'io.github.hjuutilainen.VirusTotalAnalyzer/VirusTotalAnalyzer' AU-Zoom.jss --prefs ~/Desktop/myawesomecompany.plist`
@@ -154,14 +154,14 @@ JSSI Creates Two Important Dependancies
 	
 	A: `defaults read com.github.autopkg.plist` or `plutil -convert xml1 ~/Desktop/myawesomecompany.plist `
 	
-#Troubleshooting
+# Troubleshooting
 * `autopkg list-recipes`
 * `autopkg info AU-Zoom.jss`
 * `autopkg run --post novirus path_to_recipie_override --prefs login_creds_yoursite.plist --key STOP_IF_NO_JSS_UPLOAD=False`
 
-#We Manually Make The Worker (policies) for Everything Above:
+# We Manually Make The Worker (policies) for Everything Above:
 
-##Graphical Spoiler
+## Graphical Spoiler
 ![alt text](policy-categorisation.png)
 Keep your worker policies tidy
 
@@ -171,7 +171,7 @@ Scope the JSSI Created SmartGroup
 ![alt text](policy-scriptparams.png)
 Some Parameters for `app_quitter.py` script above
 
-###Explain please
+### Explain please
 Worker policies call `silent-update.py` script or `app_quitter.py` script accordingly. Put them a category called Tlark Auto Updater. These policys execute the updates. They call the automaticaly created policies (the ones created by JSSI, don't touch those or you did something wrong and they won't scale)
 
 
