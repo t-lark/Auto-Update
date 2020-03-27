@@ -24,8 +24,6 @@ JSSI Creates Two Important Dependancies
 * If app exists and is not current version
 * Named %group_name% most likely `%NAME%-update-smart`
 
-
-
 #How To Scale This?
 1. Make a Recipie Override which Calls 2 XML Files
 2. Make XML File 1 Which customises forthcoming Policy
