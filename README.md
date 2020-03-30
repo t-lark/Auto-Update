@@ -159,7 +159,7 @@ JSSI Creates Two Important Dependancies
 * `autopkg info AU-Zoom.jss`
 * `autopkg run --post novirus path_to_recipie_override --prefs login_creds_yoursite.plist --key STOP_IF_NO_JSS_UPLOAD=False`
 
-# We Manually Make The Worker (policies) for Everything Above:
+# Manually Make The Helper (policies) for Everything Above:
 
 ## Graphical Spoiler
 ![alt text](policy-categorisation.png)
@@ -172,7 +172,7 @@ Scope the JSSI Created SmartGroup
 Some Parameters for `app_quitter.py` script above
 
 ### Explain please
-Worker policies call `silent-update.py` script or `app_quitter.py` script accordingly. Put them a category called Tlark Auto Updater. These policys execute the updates. They call the automaticaly created policies (the ones created by JSSI, don't touch those or you did something wrong and they won't scale)
+Helper policies leverage `silent-update.py` script or `app_quitter.py` script accordingly. Put them a category called Helper Policies. These policys execute the automaticaly created policies (the ones created by JSSI, don't touch those or you did something wrong and they won't scale)
 
 
 ---
