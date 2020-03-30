@@ -9,14 +9,14 @@ Thanks
 # Let's Work Backwards, Manually Make The Helper Policies:
 
 ## Graphical Spoiler
+
+## Policy Categorisation
+
 ![alt text](policy-categorisation.png)
-Keep your worker policies tidy
+
+## My Fork's Parameters in JSS 
 
 ![alt text](policy-scriptparams.png)
-With my Fork you can set the following Parameters for `app_quitter.py` see image 
-
-![alt text](policy-scope.png)
-You can cope the JSSI Created SmartGroup
 
 ### Explain please
 Helper Policies excecute the policies automatically created by JSSI in a elegant manner.
