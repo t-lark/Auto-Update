@@ -6,6 +6,37 @@ Documentation will be in this repo's [Wiki page](https://github.com/t-lark/Auto-
 
 Thanks
 
+# Let's Work Backwards, Manually Make The Helper Policies:
+
+## Graphical Spoiler
+![alt text](policy-categorisation.png)
+Keep your worker policies tidy
+
+![alt text](policy-scriptparams.png)
+With my Fork you can set the following Parameters for `app_quitter.py` see image 
+
+![alt text](policy-scope.png)
+You can cope the JSSI Created SmartGroup
+
+### Explain please
+Helper Policies excecute the policies automatically created by JSSI in a elegant manner.
+
+---
+# https://github.com/zackn9ne/Auto-Update.git
+* **Policy: Silent Update AppName** [silent update.py](https://github.com/t-lark/Auto-Update/blob/master/silent_update.py) Tries to update if app is running just skips it and will try on next check in. You have to put the below in your policy:
+
+1. Put in `$4` BundleID in your JSS
+2. put in `$5 ` The policy-trigger you want eg `jamf policy -event updatethingname` in your JSS
+
+* **Policy: Patch App Quitter AppName** [app quitter.py](https://github.com/t-lark/Auto-Update/blob/master/app_quitter.py) If app is running presents a nice pop up window with branding to ask the user if they wanna quit it and run the updates. If they cancle it will just try on next check in anyway. _What's cool about Patch App Quitter is if the App isn't running it will just update._ You have to put the below in your policy:
+
+1. `$4` com.microsoft.Excel
+2. `$5` true
+3. `$6` Excel
+4. `$7` autopudate-Microsoft Excel
+5. `$8` false
+6. `$9` Companyname + Advisory
+7. `$10` /Library/ADVisory/logonew.png
 # How to utilise this with JSSI?
 JSSI Creates Two Important Dependancies
 ### (1) Policy Side: "Install Latest Thing"
@@ -159,35 +190,3 @@ JSSI Creates Two Important Dependancies
 * `autopkg info AU-Zoom.jss`
 * `autopkg run --post novirus path_to_recipie_override --prefs login_creds_yoursite.plist --key STOP_IF_NO_JSS_UPLOAD=False`
 
-# Manually Make The Helper (policies) for Everything Above:
-
-## Graphical Spoiler
-![alt text](policy-categorisation.png)
-Keep your worker policies tidy
-
-![alt text](policy-scope.png)
-Scope the JSSI Created SmartGroup
-
-![alt text](policy-scriptparams.png)
-Some Parameters for `app_quitter.py` script above
-
-### Explain please
-Helper policies leverage `silent-update.py` script or `app_quitter.py` script accordingly. Put them a category called Helper Policies. These policys execute the automaticaly created policies (the ones created by JSSI, don't touch those or you did something wrong and they won't scale)
-
-
----
-# https://github.com/zackn9ne/Auto-Update.git
-* **Policy: Silent Update AppName** [silent update.py](https://github.com/t-lark/Auto-Update/blob/master/silent_update.py) Tries to update if app is running just skips it and will try on next check in. You have to put the below in your policy:
-
-1. Put in `$4` BundleID in your JSS
-2. put in `$5 ` The policy-trigger you want eg `jamf policy -event updatethingname` in your JSS
-
-* **Policy: Patch App Quitter AppName** [app quitter.py](https://github.com/t-lark/Auto-Update/blob/master/app_quitter.py) If app is running presents a nice pop up window with branding to ask the user if they wanna quit it and run the updates. If they cancle it will just try on next check in anyway. _What's cool about Patch App Quitter is if the App isn't running it will just update._ You have to put the below in your policy:
-
-1. `$4` com.microsoft.Excel
-2. `$5` true
-3. `$6` Excel
-4. `$7` autopudate-Microsoft Excel
-5. `$8` false
-6. `$9` Companyname + Advisory
-7. `$10` /Library/ADVisory/logonew.png
