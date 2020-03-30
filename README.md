@@ -21,39 +21,12 @@ Thanks
 ### Explain please
 Helper Policies excecute the policies automatically created by JSSI in a elegant manner.
 
----
-# https://github.com/zackn9ne/Auto-Update.git
-* **Policy: Silent Update AppName** [silent update.py](https://github.com/t-lark/Auto-Update/blob/master/silent_update.py) Tries to update if app is running just skips it and will try on next check in. You have to put the below in your policy:
-
-1. Put in `$4` BundleID in your JSS
-2. put in `$5 ` The policy-trigger you want eg `jamf policy -event updatethingname` in your JSS
-
-* **Policy: Patch App Quitter AppName** [app quitter.py](https://github.com/t-lark/Auto-Update/blob/master/app_quitter.py) If app is running presents a nice pop up window with branding to ask the user if they wanna quit it and run the updates. If they cancle it will just try on next check in anyway. _What's cool about Patch App Quitter is if the App isn't running it will just update._ You have to put the below in your policy:
-
-1. `$4` com.microsoft.Excel
-2. `$5` true
-3. `$6` Excel
-4. `$7` autopudate-Microsoft Excel
-5. `$8` false
-6. `$9` Companyname + Advisory
-7. `$10` /Library/ADVisory/logonew.png
 # How to utilise this with JSSI?
-JSSI Creates Two Important Dependancies
-### (1) Policy Side: "Install Latest Thing"
-* Creates a Policy in JSS
-* "thing" = %PROD_NAME%
-* Attaches latestversion.pkg to policy 
-* Sets to run latestversion.pkg installer
-* Has a scope likely of all computer
-* Has a custom trigger called autoupdate-%PROD_NAME%
-* Is liekly ongoing
-* Because we are going to leverage Tlark's Silent Updater or Tlakr's Prompt App Quiter
-* All we really care about it's a trigger we can call, and it has the latest package
+1. JSSI Creates A Policy on your JSS with a pkg which is the lastest version of APP, which it uploads too.
 
-### (2) Smart Groups Side: "Thing-update-smart"
-* "thing" = %NAME%
+2. JSSI Creates a Smart Groups 
+
 * If app exists and is not current version
-* Named %group_name% most likely `%NAME%-update-smart`
 
 # How To Scale This?
 1. Make a Recipie Override which Calls 2 XML Files
