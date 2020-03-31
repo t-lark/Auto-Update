@@ -48,6 +48,8 @@ Helper Policies excecute the policies automatically created by JSSI in a elegant
 * `--prefs` point this at your .plist containing your whitelisted recipies and your credentials
 
 # Working backwards you want to Find a Recipie you like and make an Override for it
+* Q: What problem do recipie overrides solve
+  A: In a production environment you will have custom requirements for where your forthcoming packages and policies are named, and put. Plus you will have XML Files as heavy lifters for the forthcoming SmartGroups and Policies that contain parameters.
 * How do I do that?
 * `autopkg list-recipies` to make sure the recipie is on your system, eg Word365.jss
 * `autopkg make-override Word365.jss`
@@ -56,7 +58,7 @@ Helper Policies excecute the policies automatically created by JSSI in a elegant
 
 # Working further backwards, set the parameters in the XML files for the heavy lifting creation of policies and SmartGroups 
 1. Make XML File 1 Which customises forthcoming Policy
-2. Make XML File 2 Which customises forthcoming SmartGroup
+. Make XML File 2 Which customises forthcoming SmartGroup
 
 
 ### So How am I supposed to do that?(read next 3 steps) 
