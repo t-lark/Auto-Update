@@ -28,7 +28,21 @@ Helper Policies excecute the policies automatically created by JSSI in a elegant
 
 * If app exists and is not current version
 
-# How To Scale This?
+***
+
+# Let's Pretend Our JSSI Is All Setup, how do we upload new packages and make SmartGroups and resulting Policies?
+
+## eg, How Do We Run This?
+### Call autopkg from the command line please
+#### you should `autopkg list-recipes` to see what's available then you can call that via name
+
+* `autopkg  run -vv --post 'io.github.hjuutilainen.VirusTotalAnalyzer/VirusTotalAnalyzer' AU-Zoom.jss --prefs ~/Desktop/myawesomecompany.plist`
+
+#### you can call in a more declative way if you are a beginner 
+
+* `autopkg  run -vv --post 'io.github.hjuutilainen.VirusTotalAnalyzer/VirusTotalAnalyzer' ~/Desktop/Autopkgr-Overrides/AU-Zoom.jss.recipe --prefs ~/Desktop/myawesomecompany.plist`
+
+# How Am I Supposed to get JSSI to Work 
 1. Make a Recipie Override which Calls 2 XML Files
 2. Make XML File 1 Which customises forthcoming Policy
 3. Make XML File 2 Which customises forthcoming SmartGroup
@@ -134,16 +148,6 @@ Helper Policies excecute the policies automatically created by JSSI in a elegant
 
 1. You made a smart group with a scope which checks app version
 2. You made a policy which runs the freshly upload pkg version based on a trigger
-
-# How Do We Run This?
-### Call autopkg from the command line please
-#### you should `autopkg list-recipes` to see what's available then you can call that via name
-
-* `autopkg  run -vv --post 'io.github.hjuutilainen.VirusTotalAnalyzer/VirusTotalAnalyzer' AU-Zoom.jss --prefs ~/Desktop/myawesomecompany.plist`
-
-#### you can call in a more declative way if you are a beginner 
-
-* `autopkg  run -vv --post 'io.github.hjuutilainen.VirusTotalAnalyzer/VirusTotalAnalyzer' ~/Desktop/Autopkgr-Overrides/AU-Zoom.jss.recipe --prefs ~/Desktop/myawesomecompany.plist`
 
 ### Breakdown
 * `--post` because virus check
