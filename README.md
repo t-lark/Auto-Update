@@ -159,11 +159,11 @@ Helper Policies excecute the policies automatically created by JSSI in a elegant
 * `autopkg info AU-Zoom.jss`
 * `autopkg run --post novirus path_to_recipie_override --prefs login_creds_yoursite.plist --key STOP_IF_NO_JSS_UPLOAD=False`
 
-	Q: how do we make the .plist?
+*	Q: how do we make the .plist?
 	
 	A: I would just use the AutoPkgr gui, save your connection settings and `cp ~/Library/Preferences/com.github.autopkg.plist ~/Desktop/myawesomecompany.plist`
 	
-	Q: how can I read the preferences as a sanity check? 
+*	Q: how can I read the PLIST (app preferences file) as a sanity check? 
 	
 	A: `defaults read com.github.autopkg.plist` or `plutil -convert xml1 ~/Desktop/myawesomecompany.plist `
 	
