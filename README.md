@@ -47,7 +47,7 @@ Helper Policies excecute the policies automatically created by JSSI in a elegant
 * `local.jss.AU-Zoom` is the package, you can string multiples of these together to call a bunch at a time
 * `--prefs` point this at your .plist containing your whitelisted recipies and your credentials
 
-# How Am I Supposed to get JSSI to Work 
+# Working further backwards, How Am I Supposed to get JSSI to Work?
 1. Make a Recipie Override which Calls 2 XML Files
 2. Make XML File 1 Which customises forthcoming Policy
 3. Make XML File 2 Which customises forthcoming SmartGroup
