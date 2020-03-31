@@ -47,10 +47,16 @@ Helper Policies excecute the policies automatically created by JSSI in a elegant
 * `local.jss.AU-Zoom` is the package, you can string multiples of these together to call a bunch at a time
 * `--prefs` point this at your .plist containing your whitelisted recipies and your credentials
 
-# Working further backwards, How Am I Supposed to get JSSI to Work?
-1. Make a Recipie Override which Calls 2 XML Files
-2. Make XML File 1 Which customises forthcoming Policy
-3. Make XML File 2 Which customises forthcoming SmartGroup
+# Working backwards you want to Find a Recipie you like and make an Override for it
+* How do I do that?
+* `autopkg list-recipies` to make sure the recipie is on your system, eg Word365.jss
+* `autopkg make-override Word365.jss`
+* This puts it in your custom recipies folder, but to that avail you will have to edit the recipie using the text editor of your choice to hard code the Category, and XML File Values for Production ready values
+* Notice the XML Identifier string of your Override recipie, it will give you the value you need to call it using the command line eg `local.jss.MicrosoftWord36`
+
+# Working further backwards, set the parameters in the XML files for the heavy lifting creation of policies and SmartGroups 
+1. Make XML File 1 Which customises forthcoming Policy
+2. Make XML File 2 Which customises forthcoming SmartGroup
 
 
 ### So How am I supposed to do that?(read next 3 steps) 
