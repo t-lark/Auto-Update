@@ -42,6 +42,11 @@ Helper Policies excecute the policies automatically created by JSSI in a elegant
 
 * `autopkg  run -vv --post 'io.github.hjuutilainen.VirusTotalAnalyzer/VirusTotalAnalyzer' ~/Desktop/Autopkgr-Overrides/AU-Zoom.jss.recipe --prefs ~/Desktop/myawesomecompany.plist`
 
+### Breakdown of cli Commands
+* `--post` because virus check
+* `local.jss.AU-Zoom` is the package, you can string multiples of these together to call a bunch at a time
+* `--prefs` point this at your .plist containing your whitelisted recipies and your credentials
+
 # How Am I Supposed to get JSSI to Work 
 1. Make a Recipie Override which Calls 2 XML Files
 2. Make XML File 1 Which customises forthcoming Policy
@@ -144,15 +149,15 @@ Helper Policies excecute the policies automatically created by JSSI in a elegant
 </computer_group>
 ```
 
-### What happens on JSS, how do I look for what I did?
+### How do I know it worked on the JSS, how do I look for what I did?
 
 1. You made a smart group with a scope which checks app version
 2. You made a policy which runs the freshly upload pkg version based on a trigger
 
-### Breakdown
-* `--post` because virus check
-* `local.jss.AU-Zoom` is the package, you can string multiples of these together to call a bunch at a time
-* `--prefs` point this at your .plist containing your whitelisted recipies and your credentials
+# Troubleshooting
+* `autopkg list-recipes`
+* `autopkg info AU-Zoom.jss`
+* `autopkg run --post novirus path_to_recipie_override --prefs login_creds_yoursite.plist --key STOP_IF_NO_JSS_UPLOAD=False`
 
 	Q: how do we make the .plist?
 	
@@ -162,8 +167,3 @@ Helper Policies excecute the policies automatically created by JSSI in a elegant
 	
 	A: `defaults read com.github.autopkg.plist` or `plutil -convert xml1 ~/Desktop/myawesomecompany.plist `
 	
-# Troubleshooting
-* `autopkg list-recipes`
-* `autopkg info AU-Zoom.jss`
-* `autopkg run --post novirus path_to_recipie_override --prefs login_creds_yoursite.plist --key STOP_IF_NO_JSS_UPLOAD=False`
-
