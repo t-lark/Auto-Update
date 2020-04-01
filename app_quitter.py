@@ -14,13 +14,13 @@ import os
 import time
 
 # jss side variables
-APPLIST = sys.argv[4].split(",") #Parameter 4 us.zoom.xos, com.apple.InstallAssistant.Catalina
+APPLIST = sys.argv[4].split(",") #Parameter 4 us.zoom.xos
 PROMPT = sys.argv[5].lower() # Parameter 5 prompt usually "true"
-APPNAME = sys.argv[6]# Parameter 6 display name of the app in the dialog boxes, i.e. "Safari", System update or upgrade
+APPNAME = sys.argv[6]# Parameter 6 display name of the app in the dialog boxes, i.e. "Safari"
 UPDATEPOLICY = sys.argv[7]# Parameter 7 the event trigger 
 FORCEQUIT = sys.argv[8].lower() #Parameter 8 forcequit usually "false"
 SIGNOFFMSG = sys.argv[9]# Parameter 9 eg "Your I.T. Department"
-LOGOPATH = sys.argv[10]# Parameter 10 eg "/Library/ADVisory/logonew.png"
+LOGOPATH = sys.argv[10]# Parameter 10 eg /Library/Application Support/JAMF/myorg/logonew.png
 
 SYMBOL = u"\u2764\ufe0f" # heart emoji, because we love Snowflake!
 # signing off message
@@ -37,11 +37,11 @@ Please press Ok to quickly update it or hit cancel to update later. Make sure to
 
 FORCEMSG = """Your {0} application is out of date
 
-{1}
+This is an emergency patch and the application will be quit to deploy security patches.
 
-{2} {3}
+{1} {2}
 """.format(
-    APPNAME, README, SYMBOL.encode("utf-8"), SIGNOFFMSG
+    APPNAME, SYMBOL.encode("utf-8"), SIGNOFFMSG
 )
 
 
