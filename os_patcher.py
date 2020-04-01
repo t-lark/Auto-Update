@@ -14,28 +14,19 @@ import os
 import time
 
 # jss side variables
-APPLIST = sys.argv[4].split(",") #Parameter 4 us.zoom.xos, com.apple.InstallAssistant.Catalina
+APPLIST = sys.argv[4].split(",") #Parameter com.apple.InstallAssistant.Catalina
 PROMPT = sys.argv[5].lower() # Parameter 5 prompt usually "true"
-APPNAME = sys.argv[6]# Parameter 6 display name of the app in the dialog boxes, i.e. "Safari", System update or upgrade
+APPNAME = sys.argv[6]# Parameter 6 display name: macOS
 UPDATEPOLICY = sys.argv[7]# Parameter 7 the event trigger 
-FORCEQUIT = sys.argv[8].lower() #Parameter 8 forcequit usually "false"
-SIGNOFFMSG = sys.argv[9]# Parameter 9 eg "Your I.T. Department"
-LOGOPATH = sys.argv[10]# Parameter 10 eg "/Library/ADVisory/logonew.png"
+SIGNOFFMSG = sys.argv[8]# Parameter 9 eg "Your I.T. Department"
+LOGOPATH = sys.argv[9]# Parameter 10 eg "/Library/ADVisory/logonew.png"
+README = sys.argv[10]# update or upgrade
 
 SYMBOL = u"\u2764\ufe0f" # heart emoji, because we love Snowflake!
 # signing off message
 
 # message to prompt the user to quit and update an app
-MESSAGE = """Your {0} application is out of date
-
-Please press Ok to quickly update it or hit cancel to update later. Make sure to save your work before proceeding.
-
-{1} {2}
-""".format(
-    APPNAME, SYMBOL.encode("utf-8"), SIGNOFFMSG
-)
-
-FORCEMSG = """Your {0} application is out of date
+MESSAGE = """Your {0} is out of date
 
 {1}
 
@@ -46,9 +37,9 @@ FORCEMSG = """Your {0} application is out of date
 
 
 # message to notify the user upon completion
-COMPLETE = """Thank You!
+COMPLETE = """Step 2of3
 
-{0} has been patched on your system.  You may relaunch it now if you wish
+{0} update has been successfully queued
 """.format(
     APPNAME
 )
@@ -113,44 +104,6 @@ def user_prompt(prompt):
         print("Error: %s" % err)
 
 
-def force_quit_prompt(prompt):
-    """jamf helper dialog to inform of the force quit"""
-    # Custom branding icon path goes here for Force Quit work flows
-    icon = "{}".format(LOGOPATH)    # test to see what icons are available on the file system
-    # test to see what icons are available on the file system
-    if not os.path.exists(icon):
-        # default fail over icon in case our custom one does not exist
-        icon = "/System/Library/CoreServices/Problem Reporter.app/Contents/Resources/ProblemReporter.icns"
-    # build the jamf helper unix command in a list
-    cmd = [
-        "/Library/Application Support/JAMF/bin/jamfHelper.app/Contents/MacOS/jamfHelper",
-        "-windowType",
-        "utility",
-        "-title",
-        "Quit Applications",
-        "-description",
-        prompt,
-        "-icon",
-        icon,
-        "-button1",
-        "OK",
-        "-defaultbutton",
-        "1",
-    ]
-    # call the command via subprocess
-    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    # get stdout and stderr
-    out, err = proc.communicate()
-    # check for exit status for button clicked, 0 = OK 2 = Cancel
-    if proc.returncode == 0:
-        # user clicked OK
-        return True
-    if proc.returncode == 2:
-        # user clicked cancel
-        return False
-    # if there is any other return print it
-    else:
-        print("Error: %s" % err)
 
 
 def quit_application(bid):
@@ -205,19 +158,16 @@ def run():
     # check to see if the app is not running, if it is not we are in luck we can update now!
     for app in APPLIST:
         if not check_if_running(app):
-            run_update_policy(UPDATEPOLICY)
-            sys.exit(0)
-    # check to see if we are forcing the app to quit first, and take action
-    if FORCEQUIT == "true":
-        force_quit_prompt(FORCEMSG)
-        # loop through the bundle ID list
-        for bid in APPLIST:
-            # force quit the app and force the update via jamf policy
-            force_quit_applicaiton(bid)
-            run_update_policy(UPDATEPOLICY)
-            user_prompt(COMPLETE)
-        # if we are using the force we can exit here
-        sys.exit(0)
+            answer = user_prompt(MESSAGE)
+            # if they click OK, will return True value
+            if answer:
+                # quit the app, run the update, prompt to notify when complete
+                #quit_application(bid)
+                run_update_policy(UPDATEPOLICY)
+                user_prompt(COMPLETE)
+            if not answer:
+                # if they click "Cancel" we will exit
+                sys.exit(0)
     # use the bundle ID or IDs from parameter 4 and iterate through them
     for bid in APPLIST:
         # check if the app is running by bundle ID and we are choosing to prompt from parameter 5
